@@ -2,7 +2,7 @@
 const express = require('express');
 const axios = require('axios');
 const dotenv = require('dotenv');
-const { IPinfoWrapper } = require("node-ipinfo");
+// const { IPinfoWrapper } = require("node-ipinfo");
 
 dotenv.config();
 
@@ -13,12 +13,12 @@ const port = process.env.PORT || 3000;
 app.get('/api/hello', async (req, res) => {
   const visitorName = req.query.visitor_name || 'Guest';
   const clientIp = req.ip;
-  const ipinfoWrapper = new IPinfoWrapper(process.env.TOKEN);
+//   const ipinfoWrapper = new IPinfoWrapper(process.env.TOKEN);
 
   try {
 
-    const locationResponse = await ipinfoWrapper.lookupIp(clientIp);
-    const location = locationResponse.city || 'Unknown location';
+    const locationResponse = await axios.get(`https://ipapi.co/${clientIp}/json/`);
+    const location = locationResponse.data.city || 'Unknown location';
 
     const weatherApiKey = process.env.WEATHER_API_KEY;
     const weatherResponse = await axios.get(`http://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${location}`);
