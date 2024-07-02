@@ -15,14 +15,21 @@ const port = process.env.PORT || 3000;
 
 app.get('/api/hello', async (req, res) => {
   const visitorName = req.query.visitor_name || 'Guest';
-  const clientIp = req.ip === '::1' ? '127.0.0.1' : req.ip;
-//   const ipinfoWrapper = new IPinfoWrapper(process.env.TOKEN);
+
+  const normalizeIp = (ip) => {
+  if (ip.startsWith('::ffff:')) {
+    return ip.replace('::ffff:', '');
+  }
+  return ip;
+};
+  let clientIp = req.clientIp || req.ip;
+  clientIp = normalizeIp(clientIp);
+
 
   try {
     const locationResponse = await axios.get(`https://ipapi.co/${clientIp}/json/`);
     const location = locationResponse.data.city || 'Unknown location';
 
-    
     const weatherApiKey = process.env.WEATHER_API_KEY;
     const weatherResponse = await axios.get(`http://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${location}`);
     const temperature = weatherResponse.data.current.temp_c;
