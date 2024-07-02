@@ -17,11 +17,8 @@ app.get('/api/hello', async (req, res) => {
 
   try {
 
-    const locationResponse = await axios.get(`https://ipapi.co/${clientIp}/json/`);
-    const location = locationResponse.data.city || 'Unknown location';
-
-    const weatherApiKey = process.env.WEATHER_API_KEY;
-    const weatherResponse = await axios.get(`http://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${location}`);
+    const weatherResponse = await axios.get(`http://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${clientIp}`);
+    const location = weatherResponse.data.location.name;
     const temperature = weatherResponse.data.current.temp_c;
 
     const greeting = `Hello, ${visitorName}!, the temperature is ${temperature} degrees Celsius in ${location}`;
