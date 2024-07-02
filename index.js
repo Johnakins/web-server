@@ -2,11 +2,14 @@
 const express = require('express');
 const axios = require('axios');
 const dotenv = require('dotenv');
+const requestIp = require('request-ip');
 // const { IPinfoWrapper } = require("node-ipinfo");
 
 dotenv.config();
 
 const app = express();
+
+app.use(requestIp.mw());
 const port = process.env.PORT || 3000;
 
 
